@@ -5,22 +5,29 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.commands.DriveToPose;
+import org.firstinspires.ftc.teamcode.commands.FieldCentricDrive;
+import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+
 public class TeleOpMode extends OpMode {
-    private DriveSubsystem drive = new DriveSubsystem();
-    private GamepadEx driverJoystick = new GamepadEx(gamepad1);
-    private GamepadEx operator = new GamepadEx(gamepad2);
+    private final DriveSubsystem drive = new DriveSubsystem();
+    private final GamepadEx driverJoystick = new GamepadEx(gamepad1);
+    private final GamepadEx operator = new GamepadEx(gamepad2);
 
 
     @Override
     public void init() {
         CommandScheduler.getInstance().enable();
+
+        //Default Commands
         drive.setDefaultCommand(new FieldCentricDrive(drive, driverJoystick));
+
+        //Driver Controls
         driverJoystick.getGamepadButton(GamepadKeys.Button.A).whenActive(new DriveToPose(drive));
     }
 
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
-
     }
 }

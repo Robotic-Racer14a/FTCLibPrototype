@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
@@ -12,8 +12,6 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -58,7 +56,6 @@ public class DriveSubsystem extends SubsystemBase {
         leftFront.setInverted(true);
         leftRear.setInverted(true);
         rightFront.setInverted(false);
-        //rightRear.setInverted(false);
         rightRear.setInverted(false);
 
         leftFront.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
@@ -71,6 +68,12 @@ public class DriveSubsystem extends SubsystemBase {
         limelight.start(); // This tells Limelight to start looking!
 
         imu.init();
+    }
+
+    @Override
+    public void periodic() {
+        odometry.updatePose();
+        updateRobotPoseMT1();
     }
 
     public Pose2d getCurrentPose() {
@@ -86,10 +89,12 @@ public class DriveSubsystem extends SubsystemBase {
         );
     }
 
-    @Override
-    public void periodic() {
-        odometry.updatePose();
-        updateRobotPoseMT1();
+    public void robotCentricDrive(double leftX, double leftY, double rightX) {
+        drive.driveRobotCentric(
+                leftX,
+                leftY,
+                rightX
+        );
     }
 
     public void updateRobotPoseMT1() {

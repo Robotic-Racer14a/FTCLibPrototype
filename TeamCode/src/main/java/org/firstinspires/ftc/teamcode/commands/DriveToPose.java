@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController;
@@ -6,11 +6,13 @@ import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.trajectory.TrapezoidProfile;
 
+import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+
 import java.util.function.Supplier;
 
 public class DriveToPose extends CommandBase {
 
-    private  DriveSubsystem drive;
+    private DriveSubsystem drive;
     private Supplier<Pose2d> currentPose = drive::getCurrentPose;
     private Pose2d targetPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 

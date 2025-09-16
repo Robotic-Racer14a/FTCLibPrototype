@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
+import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+
 public class FieldCentricDrive extends CommandBase {
 
-    private  DriveSubsystem drive;
+    private DriveSubsystem drive;
     private  GamepadEx driverJoystick;
     public FieldCentricDrive(DriveSubsystem drive, GamepadEx driverJoystick) {
         this.drive = drive;
