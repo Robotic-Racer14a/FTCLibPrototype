@@ -3,12 +3,15 @@ package org.firstinspires.ftc.teamcode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.DriveToPose;
 import org.firstinspires.ftc.teamcode.commands.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
+@TeleOp
 public class TeleOpMode extends OpMode {
     private final DriveSubsystem drive = new DriveSubsystem();
     private final GamepadEx driverJoystick = new GamepadEx(gamepad1);
