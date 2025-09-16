@@ -1,12 +1,23 @@
 package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.kinematics.HolonomicOdometry;
+
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.LLStatus;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -25,16 +36,22 @@ public class DriveSubsystem extends SubsystemBase {
     public static double B = 2.0;
     public static double ZETA = 0.7;
 
+
+
     private final Motor leftFront = new Motor(hardwareMap, "leftFront", Motor.GoBILDA.RPM_312);
     private final Motor rightFront = new Motor(hardwareMap,"leftFront", Motor.GoBILDA.RPM_312);
     private final Motor leftRear = new Motor(hardwareMap,"leftFront", Motor.GoBILDA.RPM_312);
     private final Motor rightRear = new Motor(hardwareMap,"leftFront", Motor.GoBILDA.RPM_312);
+
     private final RevIMU imu = new RevIMU(hardwareMap);
+
     private MecanumDrive drive= new MecanumDrive(false,
             leftFront, rightFront, leftRear, rightRear
     );
+
     private HolonomicOdometry odometry = new HolonomicOdometry(leftFront::getCurrentPosition, rightFront::getCurrentPosition, leftRear::getCurrentPosition, TRACK_WIDTH, CENTER_WHEEL_OFFSET);
 
+    private Limelight3A limelight;
 
 
     public DriveSubsystem () {
@@ -49,8 +66,15 @@ public class DriveSubsystem extends SubsystemBase {
         rightFront.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightRear.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
+        limelight.start(); // This tells Limelight to start looking!
 
         imu.init();
+    }
+
+    public Pose2d getCurrentPose() {
+        return odometry.getPose();
     }
 
     public void fieldCentricDrive(double leftX, double leftY, double rightX) {
@@ -61,4 +85,54 @@ public class DriveSubsystem extends SubsystemBase {
                 imu.getRotation2d().getDegrees()
         );
     }
+
+    @Override
+    public void periodic() {
+        odometry.updatePose();
+        updateRobotPoseMT1();
+    }
+
+    public void updateRobotPoseMT1() {
+        LLResult result = limelight.getLatestResult();
+
+        if (result != null && result.isValid()) {
+            Pose3D botpose = result.getBotpose();
+            if (botpose != null) {
+                double x = botpose.getPosition().x;
+                double y = botpose.getPosition().y;
+                telemetry.addData("MT1 Location", "(" + x + ", " + y + ")");
+
+                Pose2d cameraPose = new Pose2d(
+                        botpose.getPosition().x,
+                        botpose.getPosition().y,
+                        Rotation2d.fromDegrees(botpose.getOrientation().getYaw(AngleUnit.DEGREES)));
+                odometry.updatePose(cameraPose);
+            }
+        }
+    }
+
+    public void updateRobotPoseMT2() {
+        LLResult result = limelight.getLatestResult();
+
+        limelight.updateRobotOrientation(odometry.getPose().getHeading());
+        if (result != null && result.isValid()) {
+            Pose3D botpose = result.getBotpose_MT2();
+            if (botpose != null) {
+                double x = botpose.getPosition().x;
+                double y = botpose.getPosition().y;
+                telemetry.addData("MT2 Location:", "(" + x + ", " + y + ")");
+
+                Pose2d cameraPose = new Pose2d(
+                        botpose.getPosition().x,
+                        botpose.getPosition().y,
+                        Rotation2d.fromDegrees(botpose.getOrientation().getYaw(AngleUnit.DEGREES)));
+                odometry.updatePose(cameraPose);
+            }
+        }
+    }
+
+
+
+
+
 }

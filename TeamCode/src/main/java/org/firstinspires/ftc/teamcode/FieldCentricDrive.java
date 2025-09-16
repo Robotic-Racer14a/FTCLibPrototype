@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 public class FieldCentricDrive extends CommandBase {
 
     private  DriveSubsystem drive;
-    public FieldCentricDrive(DriveSubsystem drive) {
+    private  GamepadEx driverJoystick;
+    public FieldCentricDrive(DriveSubsystem drive, GamepadEx driverJoystick) {
         this.drive = drive;
+        this.driverJoystick = driverJoystick;
         addRequirements(drive);
     }
 
@@ -17,12 +20,15 @@ public class FieldCentricDrive extends CommandBase {
 
     @Override
     public void execute() {
-
+        double leftX = driverJoystick.getLeftX();
+        double leftY = driverJoystick.getLeftY();
+        double rightX = driverJoystick.getRightX();
+        drive.fieldCentricDrive(leftX, leftY, rightX);
     }
 
     @Override
     public void end(boolean interrupted) {
-
+        drive.fieldCentricDrive(0, 0, 0);
     }
 
     @Override
