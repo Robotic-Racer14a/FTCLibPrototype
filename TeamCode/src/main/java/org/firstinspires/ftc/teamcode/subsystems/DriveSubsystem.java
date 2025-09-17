@@ -73,7 +73,7 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.updatePose();
-        updateRobotPoseMT1();
+        updateRobotPoseMT2();
     }
 
     public Pose2d getCurrentPose() {

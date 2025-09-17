@@ -29,6 +29,11 @@ public class TeleOpMode extends OpMode {
     }
 
     @Override
+    public void init_loop() {
+        robot.drive.updateRobotPoseMT1();
+    }
+
+    @Override
     public void loop() {
         CommandScheduler.getInstance().run();
     }
