@@ -24,7 +24,13 @@ public class AutoExample extends OpMode {
     @Override
     public void init() {
         //Schedule Auto
-        CommandScheduler.getInstance().schedule(new AutoExampleCommand(robot));
+        CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
+                new DriveToPose(robot.drive, new Pose2d(0, 0, Rotation2d.fromDegrees(0))),
+                new WaitCommand(500),
+                new InstantCommand(() -> robot.arm.setTargetPos(500)),
+                new WaitCommand(500),
+                new DriveToPose(robot.drive, new Pose2d(-30, 30, Rotation2d.fromDegrees(0)))
+        ));
     }
 
     @Override
@@ -33,19 +39,3 @@ public class AutoExample extends OpMode {
     }
 }
 
-
-
-
-class AutoExampleCommand extends SequentialCommandGroup {
-
-    public AutoExampleCommand(RobotClass robot) {
-        addCommands(
-                new DriveToPose(robot.drive, new Pose2d(0, 0, Rotation2d.fromDegrees(0))),
-                new WaitCommand(500),
-                new InstantCommand(() -> robot.arm.setTargetPos(500)),
-                new WaitCommand(500),
-                new DriveToPose(robot.drive, new Pose2d(-30, 30, Rotation2d.fromDegrees(0)))
-        );
-
-    }
-}
