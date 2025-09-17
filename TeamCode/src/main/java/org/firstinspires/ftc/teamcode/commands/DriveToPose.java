@@ -14,7 +14,7 @@ public class DriveToPose extends CommandBase {
 
     private DriveSubsystem drive;
     private Supplier<Pose2d> currentPose = drive::getCurrentPose;
-    private Pose2d targetPose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+    private final Pose2d targetPose;
 
     private ProfiledPIDController translationPID = new ProfiledPIDController(
             0.001, 0, 0,
@@ -26,14 +26,16 @@ public class DriveToPose extends CommandBase {
     );
 
 
-    public DriveToPose(DriveSubsystem drive) {
+    public DriveToPose(DriveSubsystem drive, Pose2d targetPose) {
         this.drive = drive;
+        this.targetPose = targetPose;
         addRequirements(drive);
     }
 
     @Override
     public void initialize() {
-
+        translationPID.setTolerance(0.5);
+        rotationPID.setTolerance(3);
     }
 
     @Override
@@ -55,11 +57,11 @@ public class DriveToPose extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-
+        drive.fieldCentricDrive(0, 0, 0);
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return translationPID.atGoal() && rotationPID.atGoal();
     }
 }
