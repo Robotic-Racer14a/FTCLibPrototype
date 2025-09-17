@@ -136,6 +136,9 @@ public class DriveSubsystem extends SubsystemBase {
         }
     }
 
+    public void setOdometry (Pose2d pose) {
+        odometry.updatePose(pose);
+    }
 
 
 

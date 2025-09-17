@@ -37,5 +37,10 @@ public class AutoExample extends OpMode {
     public void loop() {
         CommandScheduler.getInstance().run();
     }
+
+    @Override
+    public void stop() {
+        robot.autoEndBlackboardCode();
+    }
 }
 
