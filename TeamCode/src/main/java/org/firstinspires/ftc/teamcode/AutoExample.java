@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.commands.ArmDefault;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.commands.DriveToPose;
 import org.firstinspires.ftc.teamcode.commands.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 
+@Autonomous
 public class AutoExample extends OpMode {
 
     private final RobotClass robot = new RobotClass();
