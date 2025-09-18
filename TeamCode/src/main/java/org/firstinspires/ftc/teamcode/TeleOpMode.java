@@ -8,6 +8,8 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -20,7 +22,14 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 @TeleOp
 public class TeleOpMode extends OpMode {
 
-    private final RobotClass robot = new RobotClass();
+    private final RobotClass robot = new RobotClass(
+            new Motor(hardwareMap, "leftFront"),
+            new Motor(hardwareMap, "rightFront"),
+            new Motor(hardwareMap, "leftRear"),
+            new Motor(hardwareMap, "rightRear"),
+            new RevIMU(hardwareMap)
+
+    );
 
     @Override
     public void init() {

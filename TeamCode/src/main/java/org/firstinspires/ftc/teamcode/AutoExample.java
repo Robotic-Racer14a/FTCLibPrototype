@@ -8,6 +8,8 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -19,7 +21,14 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 @Autonomous
 public class AutoExample extends OpMode {
 
-    private final RobotClass robot = new RobotClass();
+    private final RobotClass robot = new RobotClass(
+            new Motor(hardwareMap, "leftFront"),
+            new Motor(hardwareMap, "rightFront"),
+            new Motor(hardwareMap, "leftRear"),
+            new Motor(hardwareMap, "rightRear"),
+            new RevIMU(hardwareMap)
+
+    );
 
     @Override
     public void init() {
@@ -27,8 +36,8 @@ public class AutoExample extends OpMode {
         CommandScheduler.getInstance().schedule(new SequentialCommandGroup(
                 new DriveToPose(robot.drive, new Pose2d(0, 0, Rotation2d.fromDegrees(0))),
                 new WaitCommand(500),
-                new InstantCommand(() -> robot.arm.setTargetPos(500)),
-                new WaitCommand(500),
+//                new InstantCommand(() -> robot.arm.setTargetPos(500)),
+//                new WaitCommand(500),
                 new DriveToPose(robot.drive, new Pose2d(-30, 30, Rotation2d.fromDegrees(0)))
         ));
     }

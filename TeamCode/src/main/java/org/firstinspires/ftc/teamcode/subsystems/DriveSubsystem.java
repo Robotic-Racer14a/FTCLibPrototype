@@ -36,23 +36,40 @@ public class DriveSubsystem extends SubsystemBase {
 
 
 
-    private final Motor leftFront = new Motor(hardwareMap, "leftFront", Motor.GoBILDA.RPM_312);
-    private final Motor rightFront = new Motor(hardwareMap,"leftFront", Motor.GoBILDA.RPM_312);
-    private final Motor leftRear = new Motor(hardwareMap,"leftFront", Motor.GoBILDA.RPM_312);
-    private final Motor rightRear = new Motor(hardwareMap,"leftFront", Motor.GoBILDA.RPM_312);
+    private final Motor leftFront;
+    private final Motor rightFront;
+    private final Motor leftRear;
+    private final Motor rightRear;
 
-    private final RevIMU imu = new RevIMU(hardwareMap);
+    private final RevIMU imu;
 
-    private MecanumDrive drive= new MecanumDrive(false,
-            leftFront, rightFront, leftRear, rightRear
-    );
+    private MecanumDrive drive;
 
-    private HolonomicOdometry odometry = new HolonomicOdometry(leftFront::getCurrentPosition, rightFront::getCurrentPosition, leftRear::getCurrentPosition, TRACK_WIDTH, CENTER_WHEEL_OFFSET);
+    private HolonomicOdometry odometry;
 
     private Limelight3A limelight;
 
 
-    public DriveSubsystem () {
+    public DriveSubsystem (
+            Motor leftFront,
+            Motor rightFront,
+            Motor leftRear,
+            Motor rightRear,
+            RevIMU imu
+    ) {
+
+        this.leftFront = leftFront;
+        this.rightFront = rightFront;
+        this.leftRear = leftRear;
+        this.rightRear = rightRear;
+        this.imu = imu;
+
+        drive= new MecanumDrive(false,
+                leftFront, rightFront, leftRear, rightRear
+        );
+
+        odometry = new HolonomicOdometry(leftFront::getCurrentPosition, rightFront::getCurrentPosition, leftRear::getCurrentPosition, TRACK_WIDTH, CENTER_WHEEL_OFFSET);
+
         leftFront.setInverted(true);
         leftRear.setInverted(true);
         rightFront.setInverted(false);
