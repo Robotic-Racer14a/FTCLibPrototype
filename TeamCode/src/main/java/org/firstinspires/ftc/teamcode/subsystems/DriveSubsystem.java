@@ -47,8 +47,6 @@ public class DriveSubsystem extends SubsystemBase {
 
     private HolonomicOdometry odometry;
 
-    private Limelight3A limelight;
-
 
     public DriveSubsystem (
             Motor leftFront,
@@ -80,17 +78,13 @@ public class DriveSubsystem extends SubsystemBase {
         rightFront.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightRear.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-        limelight.start(); // This tells Limelight to start looking!
-
         imu.init();
     }
 
     @Override
     public void periodic() {
         odometry.updatePose();
-        updateRobotPoseMT2();
+
     }
 
     public Pose2d getCurrentPose() {
@@ -112,45 +106,6 @@ public class DriveSubsystem extends SubsystemBase {
                 leftY,
                 rightX
         );
-    }
-
-    public void updateRobotPoseMT1() {
-        LLResult result = limelight.getLatestResult();
-
-        if (result != null && result.isValid()) {
-            Pose3D botpose = result.getBotpose();
-            if (botpose != null) {
-                double x = botpose.getPosition().x;
-                double y = botpose.getPosition().y;
-                telemetry.addData("MT1 Location", "(" + x + ", " + y + ")");
-
-                Pose2d cameraPose = new Pose2d(
-                        botpose.getPosition().x,
-                        botpose.getPosition().y,
-                        Rotation2d.fromDegrees(botpose.getOrientation().getYaw(AngleUnit.DEGREES)));
-                odometry.updatePose(cameraPose);
-            }
-        }
-    }
-
-    public void updateRobotPoseMT2() {
-        LLResult result = limelight.getLatestResult();
-
-        limelight.updateRobotOrientation(odometry.getPose().getHeading());
-        if (result != null && result.isValid()) {
-            Pose3D botpose = result.getBotpose_MT2();
-            if (botpose != null) {
-                double x = botpose.getPosition().x;
-                double y = botpose.getPosition().y;
-                telemetry.addData("MT2 Location:", "(" + x + ", " + y + ")");
-
-                Pose2d cameraPose = new Pose2d(
-                        botpose.getPosition().x,
-                        botpose.getPosition().y,
-                        Rotation2d.fromDegrees(botpose.getOrientation().getYaw(AngleUnit.DEGREES)));
-                odometry.updatePose(cameraPose);
-            }
-        }
     }
 
     public void setOdometry (Pose2d pose) {
