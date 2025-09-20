@@ -18,11 +18,11 @@ public class DriveToPose extends CommandBase {
 
     private ProfiledPIDController translationPID = new ProfiledPIDController(
             0.001, 0, 0,
-            new TrapezoidProfile.Constraints(3, 3)
+            new TrapezoidProfile.Constraints(3 * 0.02, 3 * 0.02)
     );
     private ProfiledPIDController rotationPID = new ProfiledPIDController(
             0.001, 0, 0,
-            new TrapezoidProfile.Constraints(3, 3)
+            new TrapezoidProfile.Constraints(3 * 0.02, 3 * 0.02)
     );
 
 
