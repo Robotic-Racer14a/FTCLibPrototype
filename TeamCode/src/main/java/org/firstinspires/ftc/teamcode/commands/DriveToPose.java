@@ -49,8 +49,8 @@ public class DriveToPose extends CommandBase {
 
 
         double newRotation = rotationPID.calculate(currentPose.get().getRotation().getDegrees(), targetPose.getRotation().getDegrees());
-        double newForward = translationOutput * Math.sin(angleOfDistance);
-        double newStrafe = translationOutput * Math.cos(angleOfDistance);
+        double newForward = translationOutput * Math.cos(angleOfDistance);
+        double newStrafe = translationOutput * Math.sin(angleOfDistance);
 
         drive.fieldCentricDrive(newForward, newStrafe, newRotation);
     }
